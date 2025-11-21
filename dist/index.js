@@ -34224,7 +34224,11 @@ if (threshold != undefined && threshold != '') {
         accessKey,
         url, proxyRunning
     );
-    console.log(result)
+    console.log(result.entities[0])
+    console.log("depsVulnStats: ")
+    console.log(result?.entities[0]?.depsVulnStats)
+    console.log("length of the vulns")
+    console.log(result.entities[0].depsVulns.length)
     while (result == undefined) {
         result = await (0,_service_dependency_vulnerabilities_service_js__WEBPACK_IMPORTED_MODULE_2__/* .getDependencyVulnearabilities */ .j)(
             importId,
