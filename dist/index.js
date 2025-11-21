@@ -34224,6 +34224,7 @@ if (threshold != undefined && threshold != '') {
         accessKey,
         url, proxyRunning
     );
+    console.log(result)
     while (result == undefined) {
         result = await (0,_service_dependency_vulnerabilities_service_js__WEBPACK_IMPORTED_MODULE_2__/* .getDependencyVulnearabilities */ .j)(
             importId,
