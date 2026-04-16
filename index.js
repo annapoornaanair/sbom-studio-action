@@ -271,9 +271,7 @@ if (shouldFetchVulnerabilities) {
                 }
                 break;
             case "Critical":
-                if (criticalVulns != undefined) {
-                    failBuild = false;
-                }
+                // Do not fail the build for critical vulnerabilities
                 break;
         }
         if (criticalVulns != undefined)

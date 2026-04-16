@@ -34344,9 +34344,6 @@ if (shouldFetchVulnerabilities) {
                 }
                 break;
             case "Critical":
-                if (criticalVulns != undefined) {
-                    failBuild = false;
-                }
                 break;
         }
         if (criticalVulns != undefined)
