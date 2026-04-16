@@ -50,9 +50,9 @@ inputs:
   sbomLicenseCorrection:
     required: false
     description: 'SBOM License Correction'
-    analysisReportPath:
-      required: false
-      description: 'File path to store the SBOM analysis report as JSON'
+  analysisReportPath:
+    required: false
+    description: 'File path to store the SBOM analysis report as JSON'
   outputs:
     report:
       description: 'JSON representation of the SBOM analysis summary and vulnerabilities'

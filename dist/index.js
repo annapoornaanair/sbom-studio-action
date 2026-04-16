@@ -34024,79 +34024,7 @@ const sbomComponentVersion = _actions_core__WEBPACK_IMPORTED_MODULE_5__.getInput
 const sbomQuality = _actions_core__WEBPACK_IMPORTED_MODULE_5__.getInput('sbomQuality');
 const inputsbomAutocorrection = _actions_core__WEBPACK_IMPORTED_MODULE_5__.getInput('sbomAutocorrection');
 const inputsbomLicenseCorrection = _actions_core__WEBPACK_IMPORTED_MODULE_5__.getInput('sbomLicenseCorrection');
-const analysisReportPath = _actions_core__WEBPACK_IMPORTED_MODULE_5__.getInput('analysisReportPath');let failBuild = false;
-if (threshold != undefined && threshold != '') {
-    let result = await (0,_service_dependency_vulnerabilities_service_js__WEBPACK_IMPORTED_MODULE_2__/* .getDependencyVulnearabilities */ .j)(
-        importId,
-        secretAccessKey,
-        accessKey,
-        url, proxyRunning
-    );
-    while (result == undefined) {
-        result = await (0,_service_dependency_vulnerabilities_service_js__WEBPACK_IMPORTED_MODULE_2__/* .getDependencyVulnearabilities */ .j)(
-            importId,
-            secretAccessKey,
-            accessKey,
-            url, proxyRunning
-        );
-        console.log(result)
-        await new Promise((r) => setTimeout(r, 15000));
-    }
-    const lowVulns = result?.entities[0]?.depsVulnStats?.l;
-    const mediumVulns = result?.entities[0]?.depsVulnStats?.m;
-    const highVulns = result?.entities[0]?.depsVulnStats?.h;
-    const criticalVulns = result?.entities[0]?.depsVulnStats?.c;
-    switch (threshold) {
-        case "Low":
-            if (
-                lowVulns != undefined ||
-                mediumVulns != undefined ||
-                highVulns != undefined ||
-                criticalVulns != undefined
-            ) {
-                failBuild = true;
-            }
-            break;
-        case "Medium":
-            if (
-                mediumVulns != undefined ||
-                highVulns != undefined ||
-                criticalVulns != undefined
-            ) {
-                failBuild = true;
-            }
-            break;
-        case "High":
-            if (highVulns != undefined || criticalVulns != undefined) {
-                failBuild = true;
-            }
-            break;
-        case "Critical":
-            if (criticalVulns != undefined) {
-                failBuild = true;
-            }
-            break;
-    }
-    if (criticalVulns != undefined)
-        console.log("Critical Vulnerabilities found " + criticalVulns);
-    if (highVulns != undefined)
-        console.log("High Vulnerabilities found " + highVulns);
-    if (mediumVulns != undefined)
-        console.log("Medium Vulnerabilities found " + mediumVulns);
-    if (lowVulns != undefined)
-        console.log("Low Vulnerabilities found " + lowVulns);
-    if (result?.entities[0]?.depsVulns) {
-        for (let i = 0; i < result.entities[0].depsVulns.length; i++) {
-            console.log("--------------");
-            console.log(result?.entities[0]?.depsVulns[i]?.id);
-            console.log(result?.entities[0]?.depsVulns[i]?.summary);
-        }
-    }
-    if (failBuild) {
-        console.log("Vulnerabilities found above the set threshold. Build failing.")
-        process.exit(1);
-    }
-}
+const analysisReportPath = _actions_core__WEBPACK_IMPORTED_MODULE_5__.getInput('analysisReportPath');
 
 const noProxy = !process.env.NO_PROXY? process.env.no_proxy : process.env.NO_PROXY;
 
@@ -34106,18 +34034,18 @@ let sbomLicenseCorrection;
 const bools = ['true', 'false'];
 
 if (inputsbomAutocorrection) {
-    
+
     if (bools.includes(inputsbomAutocorrection.toLowerCase())){
     sbomAutocorrection = inputsbomAutocorrection.toLowerCase() == 'true'? true : false;
     }
     else {
         console.log("sbomAutocorrection must have a value of either true or false");
-        process.exit(1); 
+        process.exit(1);
     }
 }
 
 if (inputsbomLicenseCorrection) {
-    
+
     if (bools.includes(inputsbomLicenseCorrection.toLowerCase())){
     sbomLicenseCorrection = inputsbomLicenseCorrection.toLowerCase() == 'true'? true : false;
     }
@@ -34271,7 +34199,7 @@ while (runLoop) {
     if (status == 7110 && enrichmentStatus == 7010) {
         runLoop = false;
         importId = result?.data?.id;
-        
+
         sbomQualityGrade = result?.data?.sbomQualitySummaryV2?.gradeLetter ? result?.data?.sbomQualitySummaryV2?.gradeLetter : result?.data?.sbomQualitySummary?.gradeLetter;
         sbomQualityPct = result?.data?.sbomQualitySummaryV2?.gradePct ? Math.round(result?.data?.sbomQualitySummaryV2?.gradePct) : result?.data?.sbomQualitySummary?.gradePct
 
@@ -34289,6 +34217,7 @@ console.log(
     ", Grade Points : " +
     sbomQualityPct
 );
+
 let failBuild = false;
 const hasThreshold = threshold != undefined && threshold != '';
 const reportPath = analysisReportPath && analysisReportPath.trim() !== ''
@@ -34344,6 +34273,9 @@ if (shouldFetchVulnerabilities) {
                 }
                 break;
             case "Critical":
+                if (criticalVulns != undefined) {
+                    failBuild = false;
+                }
                 break;
         }
         if (criticalVulns != undefined)
@@ -34395,7 +34327,6 @@ if (shouldFetchVulnerabilities) {
         }
     }
 }
-
 if (sbomQuality != undefined) {
     if (sbomQuality > sbomQualityPct) {
         console.log("Sbom Quality below acceptable parameter. Build failing.")
